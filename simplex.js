@@ -56,10 +56,13 @@ function FindBadCycle(flow, s, d, n, vN, eN) {
     }
 }
 
-function UpdateSolution(flow, c1, c2, l) {
+function UpdateSolution(flow, c1, c2, l, cb) {
     var c = c1.concat(c2);
 
     for (var i = 0; i < c.length; i++)
-        if (c[i][1] != 0)
+        if (c[i][1] != 0) {
             flow[c[i][2]][2] += c[i][1] * l;
+            if (cb != undefined)
+                cb(flow[c[i][2]][0], flow[c[i][2]][1], flow[c[i][2]][2]);
+        }
 }
