@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Transportation problem</title>
+    </head>
+    <body>
+
+
+<script type="text/javascript" src="dsu.js"></script>
+<script type="text/javascript" src="kruskal.js"></script>
+<script type="text/javascript" src="network.js"></script>
+<script type="text/javascript" src="simplex.js"></script>
+<script type="text/javascript">
+    var n = 7;
+    var g = [
+        [0, 2, 7],
+        [0, 3, 5],
+        [1, 2, 8],
+        [1, 4, 5],
+        [2, 3, 9],
+        [2, 4, 7],
+        [3, 4, 15],
+        [3, 5, 6],
+        [4, 5, 8],
+        [4, 6, 9],
+        [5, 6, 11],
+    ];
+    var b = [
+        10, 10, 0, -15, -5, -2, 2,
+    ];
+
+    var n = 10;
+    var g = [
+        [0, 1, 17],
+        [0, 6, 24],
+        [0, 7, 4],
+        [0, 8, 3],
+        [0, 9, 15],
+        [1, 2, 11],
+        [1, 6, 20],
+        [2, 3, 2],
+        [2, 6, 3],
+        [3, 6, 7],
+        [3, 4, 10],
+        [3, 5, 9],
+        [5, 6, 4],
+        [6, 7, 17],
+        [7, 8, 13],
+        [7, 9, 24],
+        [9, 8, 1],
+        [9, 0, 15],
+    ];
+    var b = [
+        50, -47, 4, 3, 3, 8, 32, 0, 0, -53
+    ];
+
+    var MST = KruskalMST(g, n);
+    var labels = RelabelMST(MST, n);
+    var flow = AssignFlow(MST, n, b, labels[0], labels[1]);
+
+    for (var i = 0; i < MST.length; i++)
+        document.write(flow[i][0] + ' ' + flow[i][1] + ' ' + flow[i][2] + '<br />');
+
+    var it = 0;
+    while (it++ < 1000) {
+        var v = AssignPotentials(MST, flow, n, labels[0], labels[1]);
+        console.log(v);
+        var opt = Optimality(g, v, n);
+        if (opt[0])
+            break;
+
+        var cycle = FindBadCycle(flow, opt[2][0], opt[2][1], n, labels[0], labels[1]);
+        UpdateSolution(flow, cycle[0], cycle[1], cycle[3]);
+        var bad = flow[cycle[2]];
+        flow.splice(cycle[2], 1);
+        flow.push([opt[2][0], opt[2][1], cycle[3]]);
+        MST.splice(cycle[2], 1);
+        MST.push(g[opt[1]]);
+        labels = RelabelMST(flow, n);
+    }
+
+    var f = 0;
+    for (var i = 0; i < MST.length; i++)
+        f += MST[i][2] * flow[i][2];
+    var h = 0;
+    for (var i = 0; i < n; i++)
+        h += b[i] * v[i];
+
+    document.write("Primal cost " + f + ", dual cost " + h);
+</script>
+
+    </body>
+</html>
