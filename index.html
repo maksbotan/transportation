@@ -23,7 +23,11 @@
     <body>
 
 <div id="controls">
-    <ul>
+    <div id="pick">
+        <p>Pick a sample:</p>
+        <ul id="samples"></ul>
+    </div>
+    <ul id="solution">
         <li><a href="#" id="init">Build MST and initial basic solution</a></li>
         <li><a href="#" id="potentials">Assign potentials</a></li>
         <li><a href="#" id="optimality">Check for optimality and find offending edge</a></li>
@@ -39,10 +43,11 @@
 <script type="text/javascript" src="kruskal.js"></script>
 <script type="text/javascript" src="network.js"></script>
 <script type="text/javascript" src="simplex.js"></script>
-<script type="text/javascript" src="vivagraph.min.js"></script>
+<script type="text/javascript" src="vivagraph.js"></script>
 <script type="text/javascript" src="render.js"></script>
 <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="solution.js"></script>
+<script type="text/javascript" src="samples.js"></script>
 
 <script type="text/javascript">
     $(function() {
@@ -67,56 +72,18 @@
             it++;
             return false;
         });
+
+        $("#solution").hide();
+        for (var i = 0; i < samples.length; i++) {
+            var li = $("<li>");
+            li.text(samples[i].name);
+            li.data('id', i);
+            li.click(PickSample);
+            $("#samples").append(li);
+        }
+
+        it = 0;
     });
-
-    var n = 7;
-    var g = [
-        [0, 2, 7],
-        [0, 3, 5],
-        [1, 2, 8],
-        [1, 4, 5],
-        [2, 3, 9],
-        [2, 4, 7],
-        [3, 4, 15],
-        [3, 5, 6],
-        [4, 5, 8],
-        [4, 6, 9],
-        [5, 6, 11],
-    ];
-    var b = [
-        10, 10, 0, -15, -5, -2, 2,
-    ];
-
-    /*var n = 10;
-    var g = [
-        [0, 1, 17],
-        [0, 6, 24],
-        [0, 7, 4],
-        [0, 8, 3],
-        [0, 9, 15],
-        [1, 2, 11],
-        [1, 6, 20],
-        [2, 3, 2],
-        [2, 6, 3],
-        [3, 4, 10],
-        [3, 5, 9],
-        [3, 6, 7],
-        [4, 5, 15],
-        [5, 6, 4],
-        [6, 7, 17],
-        [7, 8, 13],
-        [7, 9, 24],
-        [8, 9, 1],
-    ];
-    var b = [
-        50, -47, 4, 3, 3, 8, 32, 0, 0, -53
-    ];*/
-
-    initGraphics();
-    for (var i = 0; i < g.length; i++)
-        graph.addLink(g[i][0], g[i][1], [i, g[i][2]]);
-
-    it = 0;
 </script>
 
     </body>

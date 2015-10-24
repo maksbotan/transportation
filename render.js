@@ -3,7 +3,7 @@ var radius = 40;
 
 function Node(node) {
     var value = Viva.Graph.svg('text')
-        .text('' + b[node.id])
+        .text('' + problem.b[node.id])
         .attr('text-anchor', 'middle')
         .attr('dx', radius)
         .attr('dy', 2 * radius / 3);
@@ -44,7 +44,11 @@ function PlaceNode(nodeUI, pos) {
     nodeUI.attr('transform', 'translate(' + (pos.x - radius) + ',' + (pos.y - radius) + ')');
 }
 
-function Link(link, fromPos, toPos) {
+function PlaceNodeConstant(node) {
+    return problem.positions[node.id];
+}
+
+function Link(link) {
     var i = link.data[0],
         c = link.data[1];
 
