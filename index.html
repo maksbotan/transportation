@@ -26,15 +26,25 @@
     <div id="pick">
         <p>Pick a sample:</p>
         <ul id="samples"></ul>
+        <p>Or construct your own problem:</p>
+        <ul>
+            <li><a href="#" id="add-vertex">Add vertex</a></li>
+            <li><a href="#" id="add-edge">Add edge</a></li>
+        </ul>
+        <p><a href="#" id="done">Done</a></p>
     </div>
-    <ul id="solution">
-        <li><a href="#" id="init">Build MST and initial basic solution</a></li>
-        <li><a href="#" id="potentials">Assign potentials</a></li>
-        <li><a href="#" id="optimality">Check for optimality and find offending edge</a></li>
-        <li><a href="#" id="cycle">Find basic cycle and edge, that should be removed from basis</a></li>
-        <li><a href="#" id="update">Update basic solution</a></li>
-    </ul>
-    <p id="status"></p>
+    <div id="solution">
+        <ul>
+            <li><a href="#" id="init">Build MST and initial basic solution</a></li>
+            <li><a href="#" id="potentials">Assign potentials</a></li>
+            <li><a href="#" id="optimality">Check for optimality and find offending edge</a></li>
+            <li><a href="#" id="cycle">Find basic cycle and edge, that should be removed from basis</a></li>
+            <li><a href="#" id="update">Update basic solution</a></li>
+        </ul>
+        <a href="#" id="save">Save</a>
+        <a href="#" id="reset">Reset</a>
+        <p id="status"></p>
+    </div>
 </div>
 
 <div id="graph"></div>
@@ -44,6 +54,7 @@
 <script type="text/javascript" src="network.js"></script>
 <script type="text/javascript" src="simplex.js"></script>
 <script type="text/javascript" src="vivagraph.js"></script>
+<script type="text/javascript" src="construction.js"></script>
 <script type="text/javascript" src="render.js"></script>
 <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="solution.js"></script>
@@ -82,7 +93,33 @@
             $("#samples").append(li);
         }
 
+        $("#add-vertex").click(AddVertex);
+        $("#add-edge").click(AddEdge);
+        $("#done").click(function() {
+            SaveProblem();
+            $("#pick").hide();
+            $("#solution").show();
+        });
+
+        $("#reset").click(function() {
+            localStorage["transportation.problem"] = undefined;
+            location.reload();
+        });
+        $("#save").click(SaveProblem);
+
         it = 0;
+        stage = "done";
+
+        if (localStorage["transportation.problem"] != undefined) {
+            problem = JSON.parse(localStorage["transportation.problem"]);
+
+            initGraphics();
+            for (var i = 0; i < problem.g.length; i++)
+                graph.addLink(problem.g[i][0], problem.g[i][1], [i, problem.g[i][2]]);
+
+            $("#pick").hide();
+            $("#solution").show();
+        }
     });
 </script>
 

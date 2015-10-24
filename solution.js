@@ -7,6 +7,8 @@ function PickSample() {
     for (var i = 0; i < problem.g.length; i++)
         graph.addLink(problem.g[i][0], problem.g[i][1], [i, problem.g[i][2]]);
 
+    SaveProblem();
+
     $("#pick").hide();
     $("#solution").show();
 }

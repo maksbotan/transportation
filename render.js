@@ -28,14 +28,15 @@ function Node(node) {
         .attr('y2', radius)
         .attr('stroke', 'black');
 
-    var ui = Viva.Graph.svg('g');
+    var ui = Viva.Graph.svg('g')
+        .attr('data-id', node.id);
     ui.append(circle);
     ui.append(line);
     ui.append(value);
     if (typeof(v) != 'undefined')
         ui.append(pot);
 
-    node.isPinned = true;
+    $(ui).click(DoAddEdge);
 
     return ui;
 }
