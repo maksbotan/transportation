@@ -11,7 +11,35 @@ function initGraphics() {
     graphics.link(Link);
     graphics.placeLink(PlaceLink);
 
-    var layout = Viva.Graph.Layout.forceDirected(graph, {
+    var arrow1 = Viva.Graph.svg('marker')
+        .attr('id', 'arrow1')
+        .attr('viewBox', '0 0 10 10')
+        .attr('refX', '10')
+        .attr('refY', '5')
+        .attr('markerUnits', 'strokeWidth')
+        .attr('markerWidth', '10')
+        .attr('markerHeight', '5')
+        .attr('orient', 'auto');
+    arrow1.append('path').attr('d', 'M 0 0 L 10 5 L 0 10 z');
+
+    var arrow2 = Viva.Graph.svg('marker')
+        .attr('id', 'arrow2')
+        .attr('viewBox', '0 0 10 10')
+        .attr('refX', '0')
+        .attr('refY', '5')
+        .attr('markerUnits', 'strokeWidth')
+        .attr('markerWidth', '10')
+        .attr('markerHeight', '5')
+        .attr('orient', 'auto');
+    arrow2.append('path').attr('d', 'M 10 0 L 0 5 L 10 10 z');
+
+    var defs = graphics.getSvgRoot().append('defs');
+    defs.append(arrow1);
+    defs.append(arrow2);
+
+    geom = Viva.Graph.geom();
+
+    layout = Viva.Graph.Layout.forceDirected(graph, {
         springLength: 4*radius,
         gravity: -20
     });
@@ -76,7 +104,7 @@ function UpdateStep() {
     MST.push(g[opt[1]]);
     labels = RelabelMST(flow, n);
 
-    SetStroke(bad[0], bad[1], 'gray', 1, '');
+    SetStroke(bad[0], bad[1], 'gray', 1, null);
     SetStroke(opt[2][0], opt[2][1], 'blue', 2, cycle[3]);
 
     v = undefined;

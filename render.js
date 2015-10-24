@@ -68,16 +68,28 @@ function degrees(x) {
 }
 
 function PlaceLink(linkUI, fromPos, toPos) {
-    var data = 'M' + fromPos.x + ',' + fromPos.y +
-               'L' + toPos.x + ',' + toPos.y;
-    var label = costs[linkUI.attr('data-id')],
-        flow_label = flows[linkUI.attr('data-id')];
-
-    linkUI.attr('d', data);
-
     var x = (fromPos.x + toPos.x) / 2,
         y = (fromPos.y + toPos.y) / 2,
         angle = Math.atan((toPos.y - fromPos.y) / (toPos.x - fromPos.x));
+
+    var dx = toPos.x - fromPos.x,
+        dy = toPos.y - fromPos.y;
+    var norm = Math.sqrt(dx*dx + dy*dy);
+    dx /= norm;
+    dy /= norm;
+
+    var fx = fromPos.x + radius*dx,
+        fy = fromPos.y + radius*dy,
+        tx = toPos.x - radius*dx,
+        ty = toPos.y - radius*dy;
+
+    var data = 'M' + fx + ',' + fy +
+               'L' + tx + ',' + ty;
+    linkUI.attr('d', data);
+
+    var label = costs[linkUI.attr('data-id')],
+        flow_label = flows[linkUI.attr('data-id')];
+
     label
         .attr('x', x + 8*Math.sin(angle))
         .attr('y', y - 8*Math.cos(angle))
@@ -89,20 +101,24 @@ function PlaceLink(linkUI, fromPos, toPos) {
 }
 
 function SetStroke(s, d, stroke, width, f) {
-    var set = false;
     graph.forEachLinkedNode(s, function(node, link) {
         if (node.id != d)
             return;
 
-        set = true;
-
         var linkUI = graphics.getLinkUI(link.id);
         linkUI.attr('stroke', stroke);
         linkUI.attr('stroke-width', width);
+        linkUI.attr('marker-start', '');
+        linkUI.attr('marker-end', '');
 
-        if (flow != undefined) {
-            var id = linkUI.attr('data-id');
-            flows[id].text(f);
+        var id = linkUI.attr('data-id');
+        flows[id].text(f);
+
+        if (f != null) {
+            if (node.id == link.toId)
+                linkUI.attr('marker-end', 'url(#arrow1)');
+            else
+                linkUI.attr('marker-start', 'url(#arrow2)');
         }
     });
 }
