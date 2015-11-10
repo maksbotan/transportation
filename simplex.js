@@ -3,10 +3,10 @@ function Optimality(graph, v, n) {
     var max = 0,
         s1, d1, i0;
 
-    for (var i = 0; i < n; i++) {
-        var s = graph[i][0],
-            d = graph[i][1],
-            c = graph[i][2];
+    for (var i = 0; i < problem.g.length; i++) {
+        var s = problem.g[i][0],
+            d = problem.g[i][1],
+            c = problem.g[i][2];
 
         if (Math.abs(v[s] - v[d]) - c > max) {
             s1 = (v[s] < v[d]) ? s : d,
